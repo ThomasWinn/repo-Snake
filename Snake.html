@@ -3,12 +3,33 @@
   <head>
     <meta charset="utf-8">
     <title>Thomas's Snake Game</title>
+    <link rel="stylesheet" type="text/css" href="Snake.css">
   </head>
 
   <body>
     <!-- Creating a canvas where game will be hosted in -->
-    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    <div id = "score"> 0 </div>
+    <div id="powerUp">
+      <p> Power-Ups: </p>
+
+    </div>
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
 
     <script src="Snake.js"></script>
+    <button id="restart" onclick="myRestartButton()">Restart Game</button>
   </body>
+
+<!--
+Things to implement:
+score
+touch border die
+touch self die
+
+Power ups: 30 sconds timer. big timer 5 seconds left
+  ghosot mode - dont die by touching self
+  score mulit
+  screen extend?
+
+ -->
+
 </html>
