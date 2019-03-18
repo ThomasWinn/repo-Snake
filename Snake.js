@@ -15,10 +15,11 @@ let snake = [
   {x: 130, y: 150},
   {x: 120, y: 150},
   {x: 110, y: 150}
-]
+];
 
 // Scoring
 let score = 0;
+let restartButton;
 
 let foodX;
 let foodY;
@@ -45,7 +46,7 @@ ctx.strokestyle = CANVAS_BORDER_COLOR; // strokestyle = Border
 ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
 // Draw a "botder" around the entire canvas
-ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height)
+ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
 
 // Starts game
 main();
@@ -56,9 +57,18 @@ createFood();
 // Call changeDirection whenever a key is pressed
 document.addEventListener("keydown", changeDirection);
 
+// Listening to click on Restart
+restartButton = document.getElementById("restart");
+restartButton.addEventListener("click", myRestartButton);
+
+/* -----------------------------------------------------------------------------
+* GAME STATE
+* ----------------------------------------------------------------------------*/
+
 function main() {
   if (didGameEnd()) {
     return;
+
   }
   setTimeout(function onTick() {
     changingDirection = false;
@@ -71,11 +81,22 @@ function main() {
   }, 100)
 }
 
-/*
-function gameRestart() {
+
+function myRestartButton() {
+  snake = [
+    {x: 150, y: 150},
+    {x: 140, y: 150},
+    {x: 130, y: 150},
+    {x: 120, y: 150},
+    {x: 110, y: 150}
+  ];
+  score = 0;
+  document.getElementById('score').innerHTML = score;
+  main();
+  createFood();
 
 }
-*/
+
 
 function clearCanvas() {
   // Select the color to fill canvas and border of canvas
@@ -89,6 +110,33 @@ function clearCanvas() {
   ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
 }
 
+// Returns true if head of snake touches a part of snake or wall
+ function didGameEnd() {
+   // Tests if snake hit itself
+   // Uses 4 because first 3 cant hit, and didCollide would be true at index 0
+   for(let i = 4; i < snake.length; i++) {
+     const didCollide = snake[i].x === snake[0].x && snake[i].y === snake[0].y;
+
+     if (didCollide) {
+       return true;
+     }
+   }
+
+   const hitLeftWall = snake[0].x < 0;
+   const hitRightWall = snake[0].x > gameCanvas.width - 10;
+   const hitTopWall = snake[0].y < 0;
+   const hitBottomWall = snake[0].y > gameCanvas.height - 10;
+
+   return hitLeftWall ||
+          hitRightWall ||
+          hitTopWall ||
+          hitBottomWall;
+ }
+
+
+/* -----------------------------------------------------------------------------
+* PLAYER SNAKE FUNCTIONALITY
+* -----------------------------------------------------------------------------*/
 
 /**
  * Draws the snake on the canvas
@@ -168,6 +216,11 @@ function changeDirection(event) {
    }
  }
 
+ /* ----------------------------------------------------------------------------
+ * FOOD FUNCTIONALITY
+ * ---------------------------------------------------------------------------*/
+
+
  function randomTen(min, max) {
    return Math.round((Math.random() * (max - min) + min) / 10) * 10;
  }
@@ -190,35 +243,4 @@ function changeDirection(event) {
    ctx.strokestyle = FOOD_BORDER_COLOR;
    ctx.fillRect(foodX, foodY, 10, 10);
    ctx.strokeRect(foodX, foodY, 10, 10);
- }
-
-
-// Returns true if head of snake touches a part of snake or wall
- function didGameEnd() {
-   // Tests if snake hit itself
-   // Uses 4 because first 3 cant hit, and didCollide would be true at index 0
-   for(let i = 4; i < snake.length; i++) {
-     const didCollide = snake[i].x === snake[0].x && snake[i].y === snake[0].y;
-
-     if (didCollide) {
-       return true;
-     }
-   }
-
-   const hitLeftWall = snake[0].x < 0;
-   const hitRightWall = snake[0].x > gameCanvas.width - 10;
-   const hitTopWall = snake[0].y < 0;
-   const hitBottomWall = snake[0].y > gameCanvas.height - 10;
-
-   return hitLeftWall ||
-          hitRightWall ||
-          hitTopWall ||
-          hitBottomWall;
- }
-
- /*
- * Restarting the game
- *
- */
- function myRestartButton() {
  }

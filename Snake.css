@@ -1,16 +1,45 @@
+body {
+  background-color: lightgreen;
+}
+
 #gameCanvas {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 #score {
     text-align: center;
     font-size: 140px;
     font-family: 'Antic Slab', serif;
 }
+
 #restart {
   position: absolute;
   top: 70%;
   align-content: center;
+}
+
+#powerUp {
+  position: absolute;
+  left: 25%;
+  width: 600px;
+  height: 100px;
+  margin-left: 120px;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+}
+
+#highScore {
+  position: absolute;
+  top: 85%;
+  left: 25%;
+  width: 600px;
+  height: 100px;
+  margin-left: 120px;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
 }

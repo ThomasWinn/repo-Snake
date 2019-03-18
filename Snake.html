@@ -13,17 +13,19 @@
       <p> Power-Ups: </p>
 
     </div>
-    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
 
     <script src="Snake.js"></script>
     <button id="restart" onclick="myRestartButton()">Restart Game</button>
+    <div id="highScore">
+      <p>High-Scores</p>
+    </div>
   </body>
 
 <!--
 Things to implement:
-score
-touch border die
-touch self die
+
+ai snakes when eating a blue
 
 Power ups: 30 sconds timer. big timer 5 seconds left
   ghosot mode - dont die by touching self
@@ -31,5 +33,11 @@ Power ups: 30 sconds timer. big timer 5 seconds left
   screen extend?
 
  -->
+
+ <!--
+ bugs:
+ If hit leftside, and push restart, itll continuously hit itself on respawn
+
+   -->
 
 </html>
