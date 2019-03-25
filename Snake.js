@@ -6,6 +6,8 @@ const SNAKE_COLOR = 'lightgreen';
 const SNAKE_BORDER_COLOR = 'darkgreen';
 const FOOD_COLOR = 'red';
 const FOOD_BORDER_COLOR = 'darkred';
+const POWERUP_COLOR = 'blue';
+const POWERUP_BORDER_COLOR = 'darkblue';
 
 
 // Creating our snake using an array
@@ -20,9 +22,18 @@ let snake = [
 // Scoring
 let score = 0;
 let restartButton;
+let powerUpCount = 3; // number of powerUps available
+
+let powerUpMenu = [
+  "ghost",
+  "DoublePoint",
+  "KillEnemySnakes"
+]
 
 let foodX;
 let foodY;
+let powerUpX;
+let powerUpY;
 
 let changingDirection = false;
 
@@ -54,6 +65,9 @@ main();
 // Create the first food location
 createFood();
 
+// Create the first powerUp location
+createPowerUp();
+
 // Call changeDirection whenever a key is pressed
 document.addEventListener("keydown", changeDirection);
 
@@ -73,6 +87,8 @@ function main() {
   setTimeout(function onTick() {
     changingDirection = false;
     clearCanvas();
+    powerUpSpawnRate();
+    drawPowerUp();
     drawFood();
     advanceSnake();
     drawSnake();
@@ -94,7 +110,16 @@ function myRestartButton() {
   document.getElementById('score').innerHTML = score;
   main();
   createFood();
+  createPowerUp();
 
+}
+
+// Spawn rate of powerUp 1 in 5
+function powerUpSpawnRate() {
+  let random5 = Math.floor((Math.random * 5) + 1);
+  if(random5 == 1) {
+    drawPowerUp();
+  }
 }
 
 
@@ -206,12 +231,42 @@ function changeDirection(event) {
 
    // Checks if snake is over food, otherwise, update snake position
    const didEatFood = snake[0].x === foodX && snake[0].y === foodY;
+   const didEatPowerUp = snake[0].x === powerUpX && snake[0].y === powerUpY;
    if (didEatFood) {
      score += 10;
      document.getElementById('score').innerHTML = score;
 
-     createFood();
-   } else {
+     createFood(); // Once eat food, it spawns new location
+   }
+   else if (didEatPowerUp) {
+     let randomNum = randomPowerUpChooser();
+     switch (randomNum) {
+       case 1:
+          ghost(); // ghost powerup
+          createPowerUp();
+          // document.getElementById('score').innerHTML = randomNum;
+          break;
+
+       case 2:
+          //doublePoints(); // Double Point powerup
+          createPowerUp();
+          document.getElementById('score').innerHTML = randomNum;
+          break;
+
+       case 3:
+          //KillEnemySnakes(); // kill enemy snakes
+          createPowerUp();
+          document.getElementById('score').innerHTML = randomNum;
+          break;
+
+       default:
+          document.getElementById('score').innerHTML = "no powerup";
+
+     }
+
+   }
+
+   else {
      snake.pop();
    }
  }
@@ -244,3 +299,90 @@ function changeDirection(event) {
    ctx.fillRect(foodX, foodY, 10, 10);
    ctx.strokeRect(foodX, foodY, 10, 10);
  }
+
+ /* ----------------------------------------------------------------------------
+ * Power-Up FUNCTIONALITY
+ * ---------------------------------------------------------------------------*/
+
+function createPowerUp() {
+  powerUpX = randomTen(0, gameCanvas.width - 10);
+  powerUpY = randomTen(0, gameCanvas.height - 10);
+
+  snake.forEach(function isPowerUpOnSnake(part) {
+    const powerUpIsOnSnake = part.x == powerUpX && part.y == powerUpY;
+    // If theres powerup on snake, try new coordinates
+    if (powerUpIsOnSnake) {
+      createPowerUp();
+    }
+  });
+}
+
+function drawPowerUp() {
+  ctx.fillStyle = POWERUP_COLOR;
+  ctx.strokestyle = POWERUP_BORDER_COLOR;
+  ctx.fillRect(powerUpX, powerUpY, 10, 10);
+  ctx.strokeRect(powerUpX, powerUpY, 10, 10);
+}
+
+function randomPowerUpChooser() {
+  return Math.floor((Math.random() * powerUpMenu.length) + 1) //return random num 1 - .length()
+}
+
+
+// SHIT BREAKS WHEN CALLED
+// SO WHEN IT CALLS GHOST FROM SWITCH, IT WONT USE THE GHOST
+// TIMER FUNCTION SET INTERVAL AND CHANGE COLOR.
+// ghost
+function ghost() {
+  document.getElementById('score').innerHTML = "randomNum";
+  let ghostTimer = setInterval(function() {
+
+    // Make snake yellow in duration of double points
+    ctx.fillStyle = 'black';
+    ctx.strokestyle = 'grey';
+
+    ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+    ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+  }, 15000);
+
+  clearInterval(ghostTimer); // clears timer after 15 sec
+}
+/*
+// DoublePoints
+function doublePoints() {
+  let doublePointsTimer = setInterval(function() {
+
+    // Make snake yellow in duration of double points
+    ctx.fillStyle = 'yellow';
+    ctx.strokestyle = 'darkyellow';
+
+    ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+    ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+
+    // Update score
+    score += 10 * 2;
+    document.getElementById('score').innerHTML = score;
+  }, 15000); // 15 seconds
+
+  clearInterval(doublePointsTimer); // clear 15 sec
+}
+
+// KillEnemySnakes
+function killEnemySnakes() {
+  let killEnemySnakesTimer = setInterval(function() {
+
+    // Make snake blue
+    ctx.fillStyle = 'blue';
+    ctx.strokestyle = 'darkblue';
+
+    ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+    ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+
+    // When the snake touches any part of the body of another snake, kill setInterval(function () {
+
+    }, 15000);
+
+    clearInterval(killEnemySnakesTimer);
+  }
+}
+*/
